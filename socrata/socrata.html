@@ -101,8 +101,8 @@
     </div>
     <br/>
     <div class="form-row">
-        <label for="node-input-socrata-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-socrata-name" placeholder="enter a name for this node">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="enter a name for this node">
     </div>
 </script>
 <!-- Help content -->
@@ -143,7 +143,7 @@
   	defaults: {
   		server: { value: "", type: "socrata-config" },
   		dataid: { value: "", required: true },
-  		soql: { value: "{ $limit: 5 }", validate: RED.validators.typedInput("payloadType"), required: true },
+  		soql: { value: '{ "$limit": 5 }', validate: RED.validators.typedInput("payloadType"), required: true },
   		name: { value: "" }
   	},
   	color: "#75d5ff",
