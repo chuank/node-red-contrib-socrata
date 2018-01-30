@@ -29,11 +29,11 @@ FAQ
 ---
 1. Do I need to have an app token?
 
-  You'll need to sign up for a Socrata developer account via your open data provider to generate an app token. The app token gives you unthrottled access to the data endpoint (but as the [Socrata Developers Portal](https://dev.socrata.com/docs/app-tokens.html) says, don't be a jerk).
+> You'll need to sign up for a Socrata developer account via your open data provider to generate an app token. The app token gives you unthrottled access to the data endpoint (but as the [Socrata Developers Portal](https://dev.socrata.com/docs/app-tokens.html) says, don't be a jerk).
 
 2. Why do requests take such a long time?
 
-  The underlying HTTP/S request is asynchronous, and shouldn't lock up the rest of Node-RED. As with any SQL-like query, it is up to you to write appropriately-efficient queries to get the data you need. Use the `$limit` and `$offset` parameters, along with control logic before the Socrata node, to [manage large dataset queries](https://dev.socrata.com/docs/paging.html).
+> The underlying HTTP/S request is asynchronous, and shouldn't lock up the rest of Node-RED. As with any SQL-like query, it is up to you to write appropriately-efficient queries to get the data you need. Use the `$limit` and `$offset` parameters, along with control logic before the Socrata node, to [manage large dataset queries](https://dev.socrata.com/docs/paging.html).
 
 
 Further Resources
