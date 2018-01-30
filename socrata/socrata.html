@@ -1,0 +1,193 @@
+<!--
+  https://github.com/chuank/node-red-contrib-socrata
+-->
+
+<!-- Socrata CONFIGURATION node -->
+<script type="text/x-red" data-template-name="socrata-config">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-url"><i class="fa fa-server"></i> SODA API Endpoint URL</label>
+        <input type="text" id="node-config-input-url" placeholder="include http/https">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-apptoken"><i class="fa fa-key"></i> App Token</label>
+        <input type="password" id="node-config-input-apptoken">
+    </div>
+</script>
+<!-- Help content -->
+<script type="text/x-red" data-help-name="socrata-config">
+  <p>Configure Socrata Open Data API credentials.</p>
+  <h3>Details</h3>
+      <h4>Node Properties</h4>
+      <code>Name</code></br>
+      <p>Give the configuration setup a human-readable name.</p>
+      <code>SODA API Endpoint URL</code></br>
+      <p>Enter the full URL of the SODA API Endpoint, including http/https protocol and port number (if needed).</p>
+      <code>App Token</code></br>
+      <p>Generate an App Token from your SODA API Endpoint account settings. While not required, having one allows unthrottled access to your Socrata dataset (use responsibly!).</p>
+      <p>&nbsp;</p>
+  <h3>References</h3>
+      <ul>
+          <li><a href="https://dev.socrata.com/docs/endpoints.html" target="_blank">Socrata Developers: API Endpoint</a></li>
+					<li><a href="https://dev.socrata.com/docs/app-tokens.html" target="_blank">Socrata Developers: Application Tokens</a></li>
+      </ul>
+</script>
+<script type="text/javascript">
+    RED.nodes.registerType("socrata-config", {
+    	category: "config",
+    	defaults: {
+    		name: { value: "" },
+    		url: { value: "", required: true },
+    		apptoken: { value: "", required: true }
+    	},
+    	credentials: {
+    		apptoken: { type: "password" }
+    	},
+    	label: function () {
+    		return (this.name || this.url);
+    	},
+    	oneditprepare: function () {
+    		$.getJSON("socrata-config/" + this.id, function (data) {
+    			if (data.apptoken) {
+    				$("#node-config-input-apptoken").val(data.apptoken);
+    			}
+    		});
+    	},
+    	oneditsave: function () {
+    		var credentials = {};
+    		var newToken = $("#node-config-input-apptoken").val();
+    		credentials.apptoken = newToken;
+
+    		$.ajax({
+    			url: "socrata-config/" + this.id,
+    			type: "POST",
+    			data: credentials,
+    			success: function (result) {}
+    		});
+    	},
+    	ondelete: function () {
+    		$.ajax({
+    			url: "socrata-config/" + this.id,
+    			type: "DELETE",
+    			success: function (result) {}
+    		});
+    	}
+    });
+</script>
+<!-- end Socrata CONFIGURATION node -->
+
+
+<!-- Socrata node -->
+<!-- Edit Dialog -->
+<script type="text/x-red" data-template-name="Socrata">
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa fa-server"></i> SODA API Endpoint</label>
+        <input type="text" id="node-input-server">
+    </div>
+    <div class="form-row">
+        <label for="node-input-dataid"><i class="fa fa-dot-circle-o"></i> Dataset Identifier</label>
+        <input type="text" id="node-input-dataid" placeholder="xxxx-xxxx">
+    </div>
+  	<br/>
+    <div class="form-row" style="margin-bottom: 0px;">
+        <label for="node-input-soql"><i class="fa fa-search"></i> SoQL</label>
+        <input type="text" id="node-input-soql" style="width:70%" placeholder="JSON-formatted SoQL query">
+    </div>
+    <div class="form-row">
+        <button id="node-input-soql-testquery" class="editor-button editor-button-small" style="margin-left: 105px; margin-top: 4px;"><i class="fa fa-share"></i> TEST QUERY (apptoken <i>not</i> used, throttled)</button>
+    </div>
+    <br/>
+    <div class="form-row">
+        <label for="node-input-socrata-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-socrata-name" placeholder="enter a name for this node">
+    </div>
+</script>
+<!-- Help content -->
+<script type="text/x-red" data-help-name="Socrata">
+  <p>Connect to a Socrata Open Data API endpoint.</p>
+  <h3>Inputs</h3>
+      <dl class="message-properties">
+          <dt class="optional">topic <span class="property-type">string</span></dt>
+          <dd> set topic to either <code>dataid</code> or <code>soql</code>.</dd>
+          <dt class="optional">payload <span class="property-type">various</span></dt>
+          <dd> depending on <code>topic</code>, <code>payload</code> will set new Dataset Identifier / SoQL query for the node. New Dataset Identifiers should be strings, while new SoQL queries can either be stringified JSON or a JSON object.</dd>
+      </dl>
+  <h3>Outputs</h3>
+      <dl class="message-properties">
+          <dt>payload <span class="property-type">JSON</span></dt>
+          <dd>JSON output of the SoQL query.</dd>
+      </dl>
+  <h3>Details</h3>
+      <h4>Node Properties</h4>
+      <code>SODA API Endpoint</code></br>
+      <p>Add or choose an existing Socrata configuration.</p>
+      <code>Dataset Identifier</code></br>
+      <p>Enter the ID used by the data source. The Dataset Identifier consists of eight alphanumeric characters split into two four-character phrases by a dash. Check with your Socrata data publisher source for this.</p>
+      <code>SoQL Query</code></br>
+      <p>Type in the SoQL query. Click on the ellipsis icon to enter the JSON editor. Use "key":value pairs to build your query. The default example limits the returned result set to 5 entries. For more details on the SoQL query language refer to the <a href="https://dev.socrata.com/docs/queries/" target="_blank">Socrata Developers Portal</a>.</p>
+      <code>Test Query</code></br>
+      <p>Clicking on the button tests the SoQL query using a new web browser window. Use this as a quick way to validate the query outside of the Node-RED environment. Note that this test excludes the protected app token credential in the Socrata Configuration node, so the test will be throttled.</p>
+      <p>&nbsp;</p>
+  <h3>References</h3>
+      <ul>
+          <li><a href="https://dev.socrata.com/docs/queries/" target="_blank">Socrata Developers Portal</a></li>
+      </ul>
+</script>
+<!-- code -->
+<script type="text/javascript">
+  RED.nodes.registerType("Socrata", {
+  	category: "Socrata",
+  	defaults: {
+  		server: { value: "", type: "socrata-config" },
+  		dataid: { value: "", required: true },
+  		soql: { value: "{ $limit: 5 }", validate: RED.validators.typedInput("payloadType"), required: true },
+  		name: { value: "" }
+  	},
+  	color: "#75d5ff",
+  	inputs: 1,
+  	outputs: 1,
+  	icon: "socrata.png",
+  	label: function () {
+  		if (this.name === undefined || this.name === "") {          // node has not been given a name
+  			return "Socrata";
+  		} else {
+  			return this.name;
+  		}
+  	},
+  	labelStyle: function () {
+  		return this.name ? "" : "node_label_italic";
+  	},
+		outputLabels: ["JSON"],
+  	oneditprepare: function () {
+  		$("#node-input-soql").typedInput({
+  			default: "json",
+  			types: ["json"]
+  		});
+
+  		$("#node-input-soql-testquery").click(function(evt) {
+				evt.preventDefault();
+				// do some basic url concatenation to test the query
+  			var cfg = $("#node-input-server").val();
+				var url = RED.nodes.node(cfg).url.replace(/\/$/, "");
+				var did = $("#node-input-dataid").val();
+
+				var par = $.param(JSON.parse($("#node-input-soql").val()));
+				var href = url + "/" + did + ".json?" + par;
+				window.open(href, "_blank");
+
+  			// if($("#node-input-server option:selected").val()!=="_ADD_") {
+  			// 	testUrl = $("#node-input-server option:selected").text() || "url should be here";
+  			// }
+  		});
+  		// END ONEDITPREPARE
+  	},
+  	oneditsave: function () {
+  	},
+  	ondelete: function () {
+  	}
+  });
+</script>
+<!-- end Socrata node -->

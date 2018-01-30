@@ -1,0 +1,33 @@
+{
+  "name": "node-red-contrib-socrata",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chuank/node-red-contrib-socrata"
+  },
+  "description": "Node-RED node to connect to Socrata Open Data API endpoints. Provides a convenient node to easily create and test SoQL queries.",
+  "main": "socrata.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+		"request": "",
+    "url": "",
+    "querystring": ""
+  },
+  "node-red": {
+    "nodes": {
+      "socrata": "socrata/socrata.js"
+    }
+  },
+  "keywords": [
+    "node-red",
+    "socrata",
+    "open",
+    "data",
+    "API",
+    "SODA"
+  ],
+  "author": "Chuan Khoo <khoo.chuan@gmail.com>",
+  "license": "MIT"
+}
