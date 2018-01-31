@@ -141,8 +141,7 @@ module.exports = function (RED) {
 
 				if(reqOK) {
 					var msg = { "payload": JSON.parse(body) };
-					var cnt = msg.payload.length() || -1;
-
+					var cnt = msg.payload.length || -1;
 					node.send([msg, cnt]);
 				}
 
