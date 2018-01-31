@@ -112,14 +112,24 @@
       <dl class="message-properties">
           <dt class="optional">topic <span class="property-type">string</span></dt>
           <dd> set topic to either <code>dataid</code> or <code>soql</code>.</dd>
-          <dt class="optional">payload <span class="property-type">various</span></dt>
-          <dd> depending on <code>topic</code>, <code>payload</code> will set new Dataset Identifier / SoQL query for the node. New Dataset Identifiers should be strings, while new SoQL queries can either be stringified JSON or a JSON object.</dd>
+          <dt>payload <span class="property-type">various</span></dt>
+          <dd> sending any payload without a topic will trigger the query. depending on <code>topic</code>, <code>payload</code> will set new Dataset Identifier / SoQL query for the node. New Dataset Identifiers should be strings, while new SoQL queries can either be stringified JSON or a JSON object.</dd>
       </dl>
   <h3>Outputs</h3>
-      <dl class="message-properties">
-          <dt>payload <span class="property-type">JSON</span></dt>
-          <dd>JSON output of the SoQL query.</dd>
-      </dl>
+			<ol class="node-ports">
+					<li>JSON output
+				      <dl class="message-properties">
+				          <dt>payload <span class="property-type">JSON</span></dt>
+				          <dd>JSON output of the SoQL query.</dd>
+				      </dl>
+					</li>
+					<li>Dataset count
+				      <dl class="message-properties">
+				          <dt>payload <span class="property-type">Number</span></dt>
+				          <dd>Size of the resulting dataset. -1 if an error ocurred.</dd>
+				      </dl>
+					</li>
+			</ol>
   <h3>Details</h3>
       <h4>Node Properties</h4>
       <code>SODA API Endpoint</code></br>
