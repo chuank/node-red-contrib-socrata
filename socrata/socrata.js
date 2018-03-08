@@ -86,20 +86,21 @@ module.exports = function (RED) {
 				return;
 			}
 
-			// set up the http request
-			opts.headers = { "X-App-Token": node.server.apptoken };
-			opts.uri = opts.href = fullUrl;
-			opts.qs = JSON.parse(node.soql);
-
-			// console.log("[Socrata] url object:", JSON.stringify(opts));
-
 			// if there's an incoming message with a valid topic, process payload accordingly
 			if (msg.topic === "dataid") {
 				node.dataid = msg.payload;
+			} else if (msg.topic === "soql" ) {
+				node.soql = JSON.parse(JSON.stringify(msg.payload));
+			} else {
+				node.soql = JSON.parse(n.soql);
 			}
-			if (msg.topic === "soql" ) {
-				node.soql = msg.payload;
-			}
+
+			// set up the http request
+			opts.headers = { "X-App-Token": node.server.apptoken };
+			opts.uri = opts.href = fullUrl;
+			opts.qs = node.soql;
+
+			// console.log("[Socrata] url object:", JSON.stringify(opts));
 
 			req(opts, function(err, response, body) {
 				if(err) {
