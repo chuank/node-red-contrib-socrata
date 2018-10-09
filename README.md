@@ -45,4 +45,4 @@ Further Resources
 
 Credits
 -------
-2018 [Chuan Khoo](www.chuank.com)
+2018 [Chuan Khoo](https://www.chuank.com)
