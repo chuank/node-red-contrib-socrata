@@ -33,7 +33,7 @@ FAQ
 
 2. Why do requests take such a long time?
 
-> The underlying HTTP/S request is asynchronous, and shouldn't lock up the rest of Node-RED. As with any SQL-like query, it is up to you to write appropriately-efficient queries to get the data you need. Use the `$limit` and `$offset` parameters, along with control logic before the Socrata node, to [manage large dataset queries](https://dev.socrata.com/docs/paging.html).
+> The underlying HTTP/S request is asynchronous, and shouldn't lock up the rest of Node-RED. As with any SQL-like query, it is up to you to write efficient queries to get the data you need. Use the `$limit` and `$offset` parameters, along with control logic before the Socrata node, to [manage large dataset queries](https://dev.socrata.com/docs/paging.html).
 
 
 Further Resources
@@ -45,4 +45,7 @@ Further Resources
 
 Credits
 -------
-2018 [Chuan Khoo](https://www.chuank.com)
+
+Copyright (c) 2018 [Chuan Khoo](https://www.chuank.com)
+
+Please refer to [LICENSE](LICENSE) for open-source licensing details & attribution.

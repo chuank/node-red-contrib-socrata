@@ -2,13 +2,11 @@
   https://github.com/chuank/node-red-contrib-socrata
 */
 
-/*eslint no-console: ["error", { allow: ["log"] }] */
-
-module.exports = function (RED) {
+module.exports = function(RED) {
 	"use strict";
 	var req = require("request");
 	var urllib = require("url");
-	var querystring = require("querystring");
+	// var querystring = require("querystring");
 
 	// ******************************************
 	// Configuration module - handles credentials
@@ -17,10 +15,6 @@ module.exports = function (RED) {
 		RED.nodes.createNode(this, n);
 		this.name = n.name;
 		this.url = n.url;
-
-		if (this.credentials && this.credentials.hasOwnProperty("apptoken")) {
-			this.apptoken = this.credentials.apptoken;
-		}
 	}
 	// register the existence of the Socrata credentials configuration node
 	RED.nodes.registerType("socrata-config", SocrataConfigNode, {
@@ -96,7 +90,7 @@ module.exports = function (RED) {
 			}
 
 			// set up the http request
-			opts.headers = { "X-App-Token": node.server.apptoken };
+			opts.headers = { "X-App-Token": node.server.credentials.apptoken };
 			opts.uri = opts.href = fullUrl;
 			opts.qs = node.soql;
 
@@ -159,45 +153,4 @@ module.exports = function (RED) {
 	// ****************************
 	Socrata.prototype.close = function() {
 	};
-
-	// *************************************************
-	// Credentials management for the configuration node
-	// *************************************************
-	RED.httpAdmin.get("/socrata-config/:id", function(req, res) {
-		var credentials = RED.nodes.getCredentials(req.params.id);
-		if (credentials) {
-			res.send(JSON.stringify({
-				apptoken: credentials.apptoken
-			}));
-		} else {
-			res.send(JSON.stringify({}));
-		}
-	});
-
-	RED.httpAdmin.delete("/socrata-config/:id", function(req, res) {
-		RED.nodes.deleteCredentials(req.params.id);
-		res.send(200);
-	});
-
-	RED.httpAdmin.post("/socrata-config/:id", function(req, res) {
-		var body = "";
-		req.on("data", function(chunk) {
-			body += chunk;
-		});
-
-		req.on("end", function() {
-			var newCreds = querystring.parse(body);
-			var credentials = RED.nodes.getCredentials(req.params.id) || {};
-
-			// console.log("socrataconfig postCredentials:", credentials);
-
-			if (newCreds.apptoken === "") {
-				delete credentials.apptoken;
-			} else {
-				credentials.apptoken = newCreds.apptoken || credentials.apptoken;
-			}
-			RED.nodes.addCredentials(req.params.id, credentials);
-			res.send(200);
-		});
-	});
 };

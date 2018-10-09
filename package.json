@@ -12,8 +12,15 @@
   },
   "dependencies": {
     "request": "",
-    "url": "",
-    "querystring": ""
+    "url": ""
+  },
+  "eslintConfig": {
+    "globals": {
+      "RED": true
+    },
+    "rules": {
+      "no-console": 0
+    }
   },
   "node-red": {
     "nodes": {
@@ -28,6 +35,6 @@
     "API",
     "SODA"
   ],
-  "author": "Chuan Khoo <khoo.chuan@gmail.com>",
+  "author": "Chuan Khoo <khoo.chuan@gmail.com> (https://chuank.com)",
   "license": "MIT"
 }
